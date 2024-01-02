@@ -149,6 +149,8 @@
 		const subWorkflowId = '80860925';
 		const resetWorkflowId = '80860924';
 		const notifyWorkflowId = '80860923';
+		const email = "karim.aboelela8@gmail.com";
+		const msg = `Quran Lessons has reaced ${lessonsCount} lessons`;
 
 		// Add Count
 		function addCount() {
@@ -179,8 +181,8 @@
 			var notifyRaw = JSON.stringify({
 				"ref": "main",
 				"inputs": {
-					"to": "karim.aboelela8@gmail.com",
-					"msg": `Quran Lessons has reaced ${lessonsCount} lessons`
+					"to": email,
+					"msg": msg
 				}
 			});
 
