@@ -270,14 +270,12 @@
 			setIframeSrc(sheetFrameToken);
 		}
 
-		// 1EqGIcNqCzs_GbwV_i0-I1EvPo_3ibqUF3pVHkjl8Xhw
 		function setCountHref(countLinkToken) {
 			const element = document.getElementById("count");
 			element.href = `https://docs.google.com/spreadsheets/d/${countLinkToken}/edit?usp=sharing`;
 			element.classList.remove("hide");
 		}
 
-		// 2PACX-1vT6DntjyhEbrREpyhuUJZbsgN6FRx9MH7LZ8wkk9OiQl1uXMXuYqw9V6sTjVrPu4Xq7fs84UPgmqVCl
 		function setIframeSrc(sheetFrameToken) {
 			const element = document.getElementById("sheet-frame");
 			element.src = `https://docs.google.com/spreadsheets/d/e/${sheetFrameToken}/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false`;
