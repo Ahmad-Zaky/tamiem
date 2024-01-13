@@ -125,23 +125,19 @@
 			<h1 class="center">Tamiem Qur'an Follow up</h1>
 			<h1 class="center">
 				<span id="sub" class="circled-shadow hide">-</span>
-				<a id="count" href="https://docs.google.com/spreadsheets/d/1EqGIcNqCzs_GbwV_i0-I1EvPo_3ibqUF3pVHkjl8Xhw/edit?usp=sharing" style="text-decoration:none" class="primary-color" target="_blank">0</a>				
+				<a id="count" href="" style="text-decoration:none" class="primary-color" target="_blank">0</a>
 				<span id="add" class="circled-shadow hide">+</span>
 			</h1>
 			<div class="center">
 				<i id="reset" class="fa fa-undo circled-shadow hide" style="font-size:36px; vertical-align: super;"></i>
 				<i id="notify" class="fa fa-bell circled-shadow hide" style="font-size:36px; vertical-align: super;"></i>
 			</div>
-			<iframe class="sheet w-100 h-100 shadow border-rd-5 mt-1" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT6DntjyhEbrREpyhuUJZbsgN6FRx9MH7LZ8wkk9OiQl1uXMXuYqw9V6sTjVrPu4Xq7fs84UPgmqVCl/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+			<iframe class="sheet w-100 h-100 shadow border-rd-5 mt-1" src=""></iframe>
 		</div>
 	</div>
 </body>
 	<script>
 		var lessonsCount = 0;
-		fetch('./count.txt?time='+Date.now())
-		  .then(response => response.text())
-		  .then(count => document.getElementById('count').textContent = lessonsCount = count);
-
 		const owner = "Ahmad-Zaky";
 		const repo = "tamiem";
 		const count = '1';
@@ -150,7 +146,9 @@
 		const resetWorkflowId = '80860924';
 		const notifyWorkflowId = '80860923';
 		const email = "karim.aboelela8@gmail.com";
-		const msg = `Quran Lessons has reaced ${lessonsCount} lessons`;
+		const msg = `Quran Lessons has reached {0} lessons`;
+
+		login();
 
 		// Add Count
 		function addCount() {
@@ -159,7 +157,7 @@
 				.then(result => window.location.reload())
 				.catch(error => console.log('error', error));
 		}
-		
+
 		// Subtract Count
 		function subCount() {
 			fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${subWorkflowId}/dispatches`, requestOptions)
@@ -167,7 +165,7 @@
 				.then(result => window.location.reload())
 				.catch(error => console.log('error', error));
 		}
-		
+
 		// Reset Count
 		function resetCount() {
 			fetch(`https://api.github.com/repos/${owner}/${repo}/actions/workflows/${resetWorkflowId}/dispatches`, requestOptions)
@@ -182,7 +180,7 @@
 				"ref": "main",
 				"inputs": {
 					"to": email,
-					"msg": msg
+					"msg": formatString(msg, lessonsCount)
 				}
 			});
 
@@ -231,17 +229,61 @@
 			document.getElementById("add").addEventListener("click", function() {
 				addCount()
 			});
-			
+
 			document.getElementById("sub").addEventListener("click", function() {
 				subCount()
 			});
-			
+
 			document.getElementById("reset").addEventListener("click", function() {
 				resetCount()
 			});
 
 			document.getElementById("notify").addEventListener("click", function() {
 				notify()
+			});
+		}
+
+		function login() {
+			const urlParams = new URLSearchParams(window.location.search);
+			if (! urlParams.has("token")) {
+				return;
+			}
+
+			const token = urlParams.get("token");
+
+			const parts = token.split("@");
+			if (parts.length !== 2) {
+				return;
+			}
+
+			fetch('./count.txt?time='+Date.now())
+			  .then(response => response.text())
+			  .then(count => document.getElementById('count').textContent = lessonsCount = count);
+
+			const countLinkToken = parts[0];
+			const sheetFrameToken = parts[1];
+
+			setCountHref(countLinkToken);
+			setIframeSrc(sheetFrameToken);
+		}
+
+		// 1EqGIcNqCzs_GbwV_i0-I1EvPo_3ibqUF3pVHkjl8Xhw
+		function setCountHref(countLinkToken) {
+			const element = document.getElementById("count");
+			element.href = `https://docs.google.com/spreadsheets/d/${countLinkToken}/edit?usp=sharing`;
+			element.classList.remove("hide");
+		}
+
+		// 2PACX-1vT6DntjyhEbrREpyhuUJZbsgN6FRx9MH7LZ8wkk9OiQl1uXMXuYqw9V6sTjVrPu4Xq7fs84UPgmqVCl
+		function setIframeSrc(sheetFrameToken) {
+			const element = document.getElementById("sheet-frame");
+			element.src = `https://docs.google.com/spreadsheets/d/e/${sheetFrameToken}/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false`;
+			element.classList.remove("hide");
+		}
+
+		const formatString = (template, ...args) => {
+			return template.replace(/{([0-9]+)}/g, function (match, index) {
+				return typeof args[index] === 'undefined' ? match : args[index];
 			});
 		}
 	</script>
