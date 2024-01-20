@@ -13,6 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Add Count
+        id: add_count
         run: |
           chmod +x scripts/add.sh
           bash scripts/add.sh ${{ github.event.inputs.count }}
